@@ -3,9 +3,9 @@ import { Setlists, Setlist } from "../../../../types/setlist";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
-  const { username: userId } = params;
+  const { username: userId } = await params;
 
   if (!userId) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
