@@ -20,9 +20,9 @@ export default function TicketStub({ setlist }: TicketStubProps) {
   const dateComponents = getDateComponents(setlist.eventDate);
 
   return (
-    <div className="bg-white border border-gray-300 p-6 flex w-80 h-40">
+    <div className="bg-white border border-gray-300 p-6 flex w-120 h-50 text-black items-center">
       <div className="">
-        <div className="border-b border-black w-56">
+        <div className="border-b border-black w-72">
           <div>{setlist.tour?.name}</div>
           <div className="font-bold">{setlist.artist.name.toUpperCase()}</div>
         </div>
@@ -41,7 +41,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
           </div>
         </div>
       </div>
-      <div className="transform rotate-270 origin-center h-8 ">
+      <div className="transform rotate-270 origin-center text-center">
         <div>NO REFUNDS OR EXCHANGES</div>
         <div>Test</div>
       </div>

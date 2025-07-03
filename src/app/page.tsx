@@ -48,7 +48,7 @@ export default function Home() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 bg-gradient-to-r from-pink-400 to-yellow-400 bg-clip-text text-transparent">
-            🎫 StubVault
+            🎫 ShowStubs
           </h1>
           <p className="text-xl text-gray-300 mb-8">
             Turn your setlist.fm setlist history into beautiful ticket stubs
@@ -117,7 +117,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
               {setlists.map((setlist, index) => (
                 <TicketStub key={`${setlist.id}-${index}`} setlist={setlist} />
               ))}
