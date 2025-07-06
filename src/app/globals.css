@@ -4,6 +4,7 @@
   --font-family-futura: 'Futura', 'Futura PT', 'Futura-Medium', 'Century Gothic', 'Trebuchet MS', 'Avenir', 'Arial', sans-serif;
   --font-applause: var(--font-applause), sans-serif;
   --font-liebeheide: var(--font-liebeheide), sans-serif;
+  --font-stampete: var(--font-stampete), sans-serif;
 }
 
 @layer base {

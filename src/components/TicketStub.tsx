@@ -80,7 +80,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
       >
         {/* Front of ticket */}
         <div
-          className={`absolute inset-0 ${selectedColor} border border-gray-300 p-6 flex text-black items-center backface-hidden`}
+          className={`absolute inset-0 ${selectedColor} border border-gray-300 py-6 px-4 flex text-black items-center backface-hidden`}
           style={{ backfaceVisibility: "hidden" }}
         >
           <div
@@ -93,8 +93,18 @@ export default function TicketStub({ setlist }: TicketStubProps) {
             }}
           />
 
-          <div className="">
-            <div className="border-b border-black w-72">
+          <div className="flex items-center justify-center w-12 shrink-0">
+            <div className="transform rotate-270 origin-center text-center">
+              <div className="flex items-center justify-center bg-white h-10 w-[200px] font-stampete tracking-widest whitespace-nowrap">
+                <a href={setlist.url} target="_blank">
+                  {setlist.id.slice(-6)}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 ml-4">
+            <div className="border-b border-black">
               <div>{setlist.tour?.name}</div>
               <div className="font-bold">
                 {setlist.artist.name.toUpperCase()}
@@ -115,9 +125,12 @@ export default function TicketStub({ setlist }: TicketStubProps) {
               </div>
             </div>
           </div>
-          <div className="transform rotate-270 origin-center text-center">
-            <div>NO REFUNDS OR EXCHANGES</div>
-            <div>{setlist.id.slice(-6)}</div>
+          <div className="flex items-center justify-center w-12 shrink-0">
+            <div className="transform rotate-270 origin-center text-center">
+              <div className="text-[9px] whitespace-nowrap">
+                NO REFUNDS OR EXCHANGES
+              </div>
+            </div>
           </div>
         </div>
 
@@ -130,13 +143,13 @@ export default function TicketStub({ setlist }: TicketStubProps) {
           }}
         >
           <div className="w-12 flex flex-col justify-between">
-            <div className="bg-black flex-1 w-8 ml-2"></div>
+            <div className="bg-black flex-1 w-9 ml-2 -mt-3"></div>
             <div>
               <div className="text-xl font-bold text-blue-800 transform -rotate-1 inline-block font-applause">
                 SETLIST
               </div>
             </div>
-            <div className="bg-black flex-1 w-8 ml-2"></div>
+            <div className="bg-black flex-1 w-9 ml-2 -mb-3"></div>
           </div>
 
           {/* Right side - Song grid */}
@@ -159,7 +172,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
                 </div>
 
                 <div className="space-y-1">
-                  {allSongs.slice(7, 15).map((song, index) => (
+                  {allSongs.slice(7, 14).map((song, index) => (
                     <div
                       key={index + 7}
                       className="leading-tight transform"
@@ -174,16 +187,16 @@ export default function TicketStub({ setlist }: TicketStubProps) {
                 </div>
 
                 <div className="space-y-1">
-                  {allSongs.slice(15, 21).map((song, index) => (
+                  {allSongs.slice(14, 21).map((song, index) => (
                     <div
-                      key={index + 15}
+                      key={index + 14}
                       className="  leading-tight transform"
                       style={{
                         transform: `rotate(${(Math.random() - 0.5) * 1}deg)`,
                         marginLeft: `${Math.random() * 3}px`,
                       }}
                     >
-                      {index + 16}. {song}
+                      {index + 15}. {song}
                     </div>
                   ))}
                   {/* Show overflow indicator if more than 30 songs */}

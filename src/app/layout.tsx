@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { applause, liebeheide } from "@/lib/fonts";
+import { applause, liebeheide, stampete } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${applause.variable} ${liebeheide.variable} antialiased`}
+        className={`${applause.variable} ${liebeheide.variable} ${stampete.variable} antialiased`}
       >
         {children}
       </body>
