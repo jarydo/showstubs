@@ -167,9 +167,9 @@ export default function Home() {
                   : `Your Concert Ticket Stubs (${setlists.length} shows)`}
               </h2>
               <div className="flex justify-center gap-4 items-center">
-                <p className="text-gray-300">
+                {/* <p className="text-gray-300">
                   Click any ticket to download as image
-                </p>
+                </p> */}
                 {username && (
                   <button
                     onClick={shareCollection}
