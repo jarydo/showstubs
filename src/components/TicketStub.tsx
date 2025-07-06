@@ -1,5 +1,5 @@
 import { Setlist } from "../types/setlist";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface TicketStubProps {
   setlist: Setlist;
@@ -7,6 +7,28 @@ interface TicketStubProps {
 
 export default function TicketStub({ setlist }: TicketStubProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [colorVariant, setColorVariant] = useState(1);
+
+  // Define 8 color variants for the ticket
+  const colorVariants = {
+    1: "bg-red-100",
+    2: "bg-blue-100",
+    3: "bg-green-100",
+    4: "bg-yellow-100",
+    5: "bg-purple-100",
+    6: "bg-pink-100",
+    7: "bg-orange-100",
+    8: "bg-teal-100",
+  };
+
+  const selectedColor =
+    colorVariants[colorVariant as keyof typeof colorVariants];
+
+  // Randomly select a color variant on component mount
+  useEffect(() => {
+    const randomColor = Math.floor(Math.random() * 8) + 1;
+    setColorVariant(randomColor);
+  }, []);
 
   const getDateComponents = (dateString: string) => {
     const [day, month, year] = dateString.split("-");
@@ -44,7 +66,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
   return (
     <div
       onClick={handleTicketClick}
-      className="group cursor-pointer perspective-1000 overflow-hidden"
+      className="group cursor-pointer perspective-1000"
       style={{ perspective: "1000px" }}
     >
       <div
@@ -58,9 +80,19 @@ export default function TicketStub({ setlist }: TicketStubProps) {
       >
         {/* Front of ticket */}
         <div
-          className="absolute inset-0 bg-white border border-gray-300 p-6 flex text-black items-center backface-hidden"
+          className={`absolute inset-0 ${selectedColor} border border-gray-300 p-6 flex text-black items-center backface-hidden`}
           style={{ backfaceVisibility: "hidden" }}
         >
+          <div
+            className="absolute inset-0 opacity-30"
+            style={{
+              backgroundImage: "url(/img/PaperTexture.png)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+
           <div className="">
             <div className="border-b border-black w-72">
               <div>{setlist.tour?.name}</div>
@@ -91,7 +123,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
 
         {/* Back of ticket */}
         <div
-          className="absolute inset-0 bg-gray-50 border border-gray-300 p-2 backface-hidden flex"
+          className="absolute inset-0 overflow-hidden bg-gray-50 border border-gray-300 p-2 backface-hidden flex"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateX(180deg)",
@@ -112,7 +144,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
             {allSongs.length > 0 ? (
               <div className="grid grid-cols-3 gap-x-4 gap-y-1 h-full content-start overflow-hidden">
                 <div className="space-y-1">
-                  {allSongs.slice(0, 8).map((song, index) => (
+                  {allSongs.slice(0, 7).map((song, index) => (
                     <div
                       key={index}
                       className="leading-tight transform"
@@ -127,35 +159,35 @@ export default function TicketStub({ setlist }: TicketStubProps) {
                 </div>
 
                 <div className="space-y-1">
-                  {allSongs.slice(8, 16).map((song, index) => (
+                  {allSongs.slice(7, 15).map((song, index) => (
                     <div
-                      key={index + 8}
+                      key={index + 7}
                       className="leading-tight transform"
                       style={{
                         transform: `rotate(${(Math.random() - 0.5) * 1}deg)`,
                         marginLeft: `${Math.random() * 3}px`,
                       }}
                     >
-                      {index + 9}. {song}
+                      {index + 8}. {song}
                     </div>
                   ))}
                 </div>
 
                 <div className="space-y-1">
-                  {allSongs.slice(16, 24).map((song, index) => (
+                  {allSongs.slice(15, 21).map((song, index) => (
                     <div
-                      key={index + 16}
+                      key={index + 15}
                       className="  leading-tight transform"
                       style={{
                         transform: `rotate(${(Math.random() - 0.5) * 1}deg)`,
                         marginLeft: `${Math.random() * 3}px`,
                       }}
                     >
-                      {index + 17}. {song}
+                      {index + 16}. {song}
                     </div>
                   ))}
                   {/* Show overflow indicator if more than 30 songs */}
-                  {allSongs.length > 24 && (
+                  {allSongs.length > 21 && (
                     <div className="text-xs text-gray-400 italic mt-2">
                       + {allSongs.length - 24} more songs...
                     </div>
@@ -172,7 +204,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
           {/* Background watermark */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-3">
             <div className="text-xs text-black leading-tight max-w-full whitespace-pre-wrap text-center transform rotate-45">
-              {Array(20).fill("setlist.fm verified authentic").join(" ")}
+              {Array(20).fill("showstubs verified authentic").join(" ")}
             </div>
           </div>
         </div>
