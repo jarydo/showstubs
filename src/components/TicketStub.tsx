@@ -68,7 +68,9 @@ export default function TicketStub({ setlist }: TicketStubProps) {
       setlist.sets.set.forEach((set) => {
         if (set.song) {
           set.song.forEach((song) => {
-            songs.push(song.name);
+            if (song.name) {
+              songs.push(song.name);
+            }
           });
         }
       });
@@ -252,7 +254,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
                   ))}
                   {/* Show overflow indicator if more than 21 songs */}
                   {allSongs.length > 21 && (
-                    <div className="text-[8px] sm:text-xs text-gray-400 italic mt-1 sm:mt-2">
+                    <div className="text-[8px] sm:text-xs text-gray-900 italic mt-1 sm:mt-2">
                       + {allSongs.length - 21} more songs...
                     </div>
                   )}
@@ -260,7 +262,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
 
                 {/* Mobile overflow indicator for 2-column layout */}
                 {allSongs.length > 14 && (
-                  <div className="text-[8px] text-gray-400 italic mt-1 col-span-2 sm:hidden">
+                  <div className="text-[8px] text-gray-900 italic mt-1 col-span-2 sm:hidden">
                     + {allSongs.length - 14} more songs...
                   </div>
                 )}
