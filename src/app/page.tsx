@@ -51,7 +51,11 @@ function HomeContent() {
 
     try {
       const response = await fetch(
-        `/api/setlists/${encodeURIComponent(targetUserId)}?page=${page}`
+        `${
+          process.env.NODE_ENV === "production"
+            ? process.env.NEXT_PUBLIC_API_BASE_URL
+            : ""
+        }/api/setlists/${encodeURIComponent(targetUserId)}?page=${page}`
       );
       const data: SetlistsResponse = await response.json();
 
