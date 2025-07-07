@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   env: {
     SETLISTFM_API_KEY: process.env.SETLISTFM_API_KEY,
   },
-  basePath: "https://showstubs-jaryd-diamonds-projects.vercel.app/",
+  assetPrefix: "https://showstubs-jaryd-diamonds-projects.vercel.app/",
 };
 
 export default nextConfig;
