@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   },
   assetPrefix:
     process.env.NODE_ENV === "production"
-      ? "https://curiosity-cards-jaryd-diamonds-projects.vercel.app"
+      ? "https://showstubs-jaryd-diamonds-projects.vercel.app/"
       : "",
 
   images: {
