@@ -30,6 +30,21 @@ export default function TicketStub({ setlist }: TicketStubProps) {
     setColorVariant(randomColor);
   }, []);
 
+  // Get the correct image path based on context
+  const getImagePath = () => {
+    if (typeof window === "undefined") return "/img/PaperTexture.png";
+
+    const hostname = window.location.hostname;
+    const currentPath = window.location.pathname;
+    const isChannelDomain = hostname === "channel.jaryddiamond.com";
+    const isInShowstubs = currentPath.startsWith("/showstubs");
+
+    if (isChannelDomain && isInShowstubs) {
+      return "/showstubs/img/PaperTexture.png";
+    }
+    return "/img/PaperTexture.png";
+  };
+
   const getDateComponents = (dateString: string) => {
     const [day, month, year] = dateString.split("-");
     const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
@@ -90,7 +105,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
           <div
             className="absolute inset-0 opacity-30"
             style={{
-              backgroundImage: "url(/img/PaperTexture.png)",
+              backgroundImage: `url(${getImagePath()})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
