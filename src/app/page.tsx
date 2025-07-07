@@ -20,12 +20,32 @@ function HomeContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    const currentPath = window.location.pathname;
+    const hostname = window.location.hostname;
+
+    // If on channel.jaryddiamond.com, only work under /showstubs
+    const isChannelDomain = hostname === "channel.jaryddiamond.com";
+    const isInShowstubs = currentPath.startsWith("/showstubs");
+
+    if (isChannelDomain && !isInShowstubs) {
+      return; // Don't work on channel domain unless under /showstubs
+    }
+
     // Check for userId in URL search params (from redirect)
     const urlUserId = searchParams.get("userId");
     const urlPage = searchParams.get("page");
 
-    // Also check if there's a userId in the URL path directly
-    const pathUserId = window.location.pathname.split("/")[1];
+    // Extract userId from path
+    const pathSegments = currentPath.split("/").filter(Boolean);
+    let pathUserId;
+
+    if (isChannelDomain && isInShowstubs) {
+      // On channel domain under /showstubs: /showstubs/userid
+      pathUserId = pathSegments[1]; // Get the segment after 'showstubs'
+    } else {
+      // On direct domain (Vercel/localhost): /userid
+      pathUserId = pathSegments[0]; // Get the first segment
+    }
 
     const targetUserId = urlUserId || pathUserId;
     const targetPage = urlPage ? parseInt(urlPage) : 1;
@@ -50,9 +70,21 @@ function HomeContent() {
     setError("");
 
     try {
-      const response = await fetch(
-        `/api/setlists/${encodeURIComponent(targetUserId)}?page=${page}`
-      );
+      // Check domain and path context
+      const currentPath = window.location.pathname;
+      const hostname = window.location.hostname;
+      const isChannelDomain = hostname === "channel.jaryddiamond.com";
+      const isInShowstubs = currentPath.startsWith("/showstubs");
+
+      // Build API URL based on context
+      const apiUrl =
+        isChannelDomain && isInShowstubs
+          ? `/showstubs/api/setlists/${encodeURIComponent(
+              targetUserId
+            )}?page=${page}`
+          : `/api/setlists/${encodeURIComponent(targetUserId)}?page=${page}`;
+
+      const response = await fetch(apiUrl);
       const data: SetlistsResponse = await response.json();
 
       if (!response.ok) {
@@ -65,8 +97,18 @@ function HomeContent() {
 
       // Update URL if not already a shared view
       if (!isSharedView && !searchParams.get("userId")) {
-        const url =
-          page > 1 ? `/${targetUserId}?page=${page}` : `/${targetUserId}`;
+        let url;
+        if (isChannelDomain && isInShowstubs) {
+          // On channel domain: /showstubs/userid or /showstubs/userid?page=X
+          const basePath = "/showstubs";
+          url =
+            page > 1
+              ? `${basePath}/${targetUserId}?page=${page}`
+              : `${basePath}/${targetUserId}`;
+        } else {
+          // On direct domain: /userid or /userid?page=X
+          url = page > 1 ? `/${targetUserId}?page=${page}` : `/${targetUserId}`;
+        }
         window.history.pushState({}, "", url);
       } else if (isSharedView && page > 1) {
         // Update URL with page parameter for shared views
@@ -96,7 +138,20 @@ function HomeContent() {
   };
 
   const shareCollection = () => {
-    const shareUrl = `${window.location.origin}/${username}`;
+    const currentPath = window.location.pathname;
+    const hostname = window.location.hostname;
+    const isChannelDomain = hostname === "channel.jaryddiamond.com";
+    const isInShowstubs = currentPath.startsWith("/showstubs");
+
+    let shareUrl;
+    if (isChannelDomain && isInShowstubs) {
+      // On channel domain: include /showstubs prefix
+      shareUrl = `${window.location.origin}/showstubs/${username}`;
+    } else {
+      // On direct domain: no prefix needed
+      shareUrl = `${window.location.origin}/${username}`;
+    }
+
     navigator.clipboard
       .writeText(shareUrl)
       .then(() => {

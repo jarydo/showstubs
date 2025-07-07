@@ -14,9 +14,16 @@ export default function UserPage({ params }: UserPageProps) {
   const { userId } = use(params);
 
   useEffect(() => {
-    // Redirect to home page with the userId in the URL
-    // The main page will handle the auto-loading
-    router.replace(`/?userId=${userId}`);
+    // Check if we're in a subpath context
+    const currentPath = window.location.pathname;
+    const isInShowstubs = currentPath.startsWith("/showstubs");
+
+    // Redirect to appropriate base path with the userId in the URL
+    if (isInShowstubs) {
+      router.replace(`/showstubs?userId=${userId}`);
+    } else {
+      router.replace(`/?userId=${userId}`);
+    }
   }, [userId, router]);
 
   return (
