@@ -3,11 +3,12 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import TicketStub from "../components/TicketStub";
 import Pagination from "../components/Pagination";
 import { Setlist, SetlistsResponse, PaginationInfo } from "../types/setlist";
 
-export default function Home() {
+function HomeContent() {
   const [username, setUsername] = useState("");
   const [setlists, setSetlists] = useState<Setlist[]>([]);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
@@ -237,5 +238,35 @@ export default function Home() {
         )}
       </div>
     </main>
+  );
+}
+
+// Loading fallback component
+function LoadingFallback() {
+  return (
+    <main className="min-h-screen bg-white py-8 px-4">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-6xl font-bold text-black mb-4">
+            🎫 ShowStubs
+          </h1>
+          <p className="text-xl text-gray-700 mb-8">
+            Turn your setlist.fm setlist history into beautiful ticket stubs
+          </p>
+        </div>
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
+          <p className="text-gray-600 mt-4">Loading...</p>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <HomeContent />
+    </Suspense>
   );
 }
