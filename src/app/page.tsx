@@ -91,53 +91,47 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
+    <main className="min-h-screen bg-white py-8 px-4 ">
+      <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 bg-gradient-to-r from-pink-400 to-yellow-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-6xl font-bold text-black mb-4 ">
             🎫 ShowStubs
           </h1>
-          <p className="text-xl text-gray-300 mb-8">
+          <p className="text-xl text-gray-700 mb-8">
             Turn your setlist.fm setlist history into beautiful ticket stubs
           </p>
           {!isSharedView && (
-            <div className="text-sm text-gray-400 max-w-2xl mx-auto">
+            <div className="text-sm text-gray-500 max-w-2xl mx-auto">
               <p>
                 💡 <strong>How to find your User ID:</strong> Go to your
                 setlist.fm profile and look at the URL. Your User ID is the
                 number after{" "}
-                <code className="bg-gray-800 px-1 rounded">/user/</code>
+                <code className="bg-gray-200 px-1 rounded">/user/</code>
               </p>
             </div>
           )}
         </div>
 
         {!isSharedView && (
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 mb-8 border border-white/20">
+          <div className="bg-black/10 backdrop-blur-lg rounded-2xl p-6 mb-8 border border-black/20">
             <form
               onSubmit={handleSubmit}
               className="flex flex-col sm:flex-row gap-4"
             >
               <div className="flex-1">
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-white mb-2"
-                >
-                  setlist.fm User ID
-                </label>
                 <input
                   type="text"
                   id="username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter your setlist.fm user ID"
-                  className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent"
+                  className="w-full px-4 py-3 rounded-lg bg-white/20 border border-black/30 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-transparent"
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-8 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-lg hover:from-pink-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                className="px-8 py-3 bg-[#85b146] text-white font-semibold rounded-lg hover:bg-[#6a8c38] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#56732d]"
               >
                 {loading ? "Generating..." : "Generate Tickets"}
               </button>
@@ -147,7 +141,7 @@ export default function Home() {
 
         {error && (
           <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-6">
-            <p className="text-red-200">{error}</p>
+            <p className="text-red-800">{error}</p>
           </div>
         )}
 
@@ -161,7 +155,7 @@ export default function Home() {
         {setlists.length > 0 && (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-white mb-2">
+              <h2 className="text-2xl font-bold text-black mb-2">
                 {isSharedView
                   ? `Concert Ticket Stubs (${setlists.length} shows)`
                   : `Your Concert Ticket Stubs (${setlists.length} shows)`}
@@ -173,7 +167,7 @@ export default function Home() {
                 {username && (
                   <button
                     onClick={shareCollection}
-                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center gap-2"
+                    className="px-4 py-2 bg-[#85b146] hover:bg-[#6a8c38] text-white text-sm font-medium rounded-lg transition-colors duration-200 cursor-pointer flex items-center gap-2"
                   >
                     📋 Share Collection
                   </button>
@@ -181,7 +175,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 place-items-center">
               {setlists.map((setlist, index) => (
                 <TicketStub key={`${setlist.id}-${index}`} setlist={setlist} />
               ))}

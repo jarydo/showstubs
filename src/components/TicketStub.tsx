@@ -80,7 +80,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
       >
         {/* Front of ticket */}
         <div
-          className={`absolute inset-0 ${selectedColor} border border-gray-300 py-6 px-4 flex text-black items-center backface-hidden`}
+          className={`absolute inset-0 ${selectedColor} border border-gray-400 py-6 px-4 flex text-black items-center backface-hidden`}
           style={{ backfaceVisibility: "hidden" }}
         >
           <div
@@ -93,9 +93,9 @@ export default function TicketStub({ setlist }: TicketStubProps) {
             }}
           />
 
-          <div className="flex items-center justify-center w-12 shrink-0">
+          <div className="flex items-center justify-center w-10 shrink-0">
             <div className="transform rotate-270 origin-center text-center">
-              <div className="flex items-center justify-center bg-white h-10 w-[200px] font-stampete tracking-widest whitespace-nowrap">
+              <div className="flex items-center justify-center bg-white h-9 w-[199px] font-stampete tracking-widest whitespace-nowrap">
                 <a href={setlist.url} target="_blank">
                   {setlist.id.slice(-6)}
                 </a>
@@ -136,7 +136,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
 
         {/* Back of ticket */}
         <div
-          className="absolute inset-0 overflow-hidden bg-gray-50 border border-gray-300 p-2 backface-hidden flex"
+          className="absolute inset-0 overflow-hidden bg-gray-50 border border-gray-400 p-2 backface-hidden flex"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateX(180deg)",
