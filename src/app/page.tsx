@@ -4,11 +4,14 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import TicketStub from "../components/TicketStub";
-import { Setlist } from "../types/setlist";
+import Pagination from "../components/Pagination";
+import { Setlist, SetlistsResponse, PaginationInfo } from "../types/setlist";
 
 export default function Home() {
   const [username, setUsername] = useState("");
   const [setlists, setSetlists] = useState<Setlist[]>([]);
+  const [pagination, setPagination] = useState<PaginationInfo | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isSharedView, setIsSharedView] = useState(false);
@@ -18,20 +21,23 @@ export default function Home() {
   useEffect(() => {
     // Check for userId in URL search params (from redirect)
     const urlUserId = searchParams.get("userId");
+    const urlPage = searchParams.get("page");
 
     // Also check if there's a userId in the URL path directly
     const pathUserId = window.location.pathname.split("/")[1];
 
     const targetUserId = urlUserId || pathUserId;
+    const targetPage = urlPage ? parseInt(urlPage) : 1;
 
     if (targetUserId && targetUserId !== "") {
       setUsername(targetUserId);
+      setCurrentPage(targetPage);
       setIsSharedView(true);
-      fetchSetlists(targetUserId);
+      fetchSetlists(targetUserId, targetPage);
     }
   }, [searchParams]);
 
-  const fetchSetlists = async (userId?: string) => {
+  const fetchSetlists = async (userId?: string, page: number = 1) => {
     const targetUserId = userId || username;
 
     if (!targetUserId.trim()) {
@@ -44,23 +50,33 @@ export default function Home() {
 
     try {
       const response = await fetch(
-        `/api/setlists/${encodeURIComponent(targetUserId)}`
+        `/api/setlists/${encodeURIComponent(targetUserId)}?page=${page}`
       );
-      const data = await response.json();
+      const data: SetlistsResponse = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to fetch setlists");
       }
 
       setSetlists(data.setlists || []);
+      setPagination(data.pagination);
+      setCurrentPage(page);
 
       // Update URL if not already a shared view
       if (!isSharedView && !searchParams.get("userId")) {
-        window.history.pushState({}, "", `/${targetUserId}`);
+        const url =
+          page > 1 ? `/${targetUserId}?page=${page}` : `/${targetUserId}`;
+        window.history.pushState({}, "", url);
+      } else if (isSharedView && page > 1) {
+        // Update URL with page parameter for shared views
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set("page", page.toString());
+        window.history.pushState({}, "", currentUrl.toString());
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       setSetlists([]);
+      setPagination(null);
     } finally {
       setLoading(false);
     }
@@ -68,7 +84,14 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchSetlists();
+    setCurrentPage(1);
+    fetchSetlists(undefined, 1);
+  };
+
+  const handlePageChange = (page: number) => {
+    fetchSetlists(username, page);
+    // Scroll to top when changing pages
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const shareCollection = () => {
@@ -147,23 +170,29 @@ export default function Home() {
 
         {loading && (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-            <p className="text-white mt-4">Fetching your setlist history...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
+            <p className="text-gray-600 mt-4">
+              Fetching your setlist history...
+            </p>
           </div>
         )}
 
-        {setlists.length > 0 && (
+        {setlists.length > 0 && pagination && (
           <div className="space-y-6">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-black mb-2">
                 {isSharedView
-                  ? `Concert Ticket Stubs (${setlists.length} shows)`
-                  : `Your Concert Ticket Stubs (${setlists.length} shows)`}
+                  ? `Concert Ticket Stubs (${pagination.totalItems} shows)`
+                  : `Your Concert Ticket Stubs (${pagination.totalItems} shows)`}
               </h2>
               <div className="flex justify-center gap-4 items-center">
-                {/* <p className="text-gray-300">
-                  Click any ticket to download as image
-                </p> */}
+                <p className="text-gray-600 text-sm">
+                  Showing {20 * (pagination.currentPage - 1) + 1}-
+                  {setlists.length + 20 * (pagination.currentPage - 1)} of{" "}
+                  {pagination.totalItems} shows
+                </p>
+              </div>
+              <div className="flex justify-center mt-4">
                 {username && (
                   <button
                     onClick={shareCollection}
@@ -175,17 +204,33 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Pagination at top */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={pagination.totalPages}
+              onPageChange={handlePageChange}
+              loading={loading}
+            />
+
             <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 place-items-center">
               {setlists.map((setlist, index) => (
                 <TicketStub key={`${setlist.id}-${index}`} setlist={setlist} />
               ))}
             </div>
+
+            {/* Pagination at bottom */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={pagination.totalPages}
+              onPageChange={handlePageChange}
+              loading={loading}
+            />
           </div>
         )}
 
         {!loading && setlists.length === 0 && username && !error && (
           <div className="text-center py-12">
-            <p className="text-gray-300 text-lg">
+            <p className="text-gray-600 text-lg">
               No setlists found for this user ID.
             </p>
           </div>

@@ -5,6 +5,21 @@ export interface Setlists {
   itemsPerPage: number;
 }
 
+export interface PaginationInfo {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface SetlistsResponse {
+  setlists: Setlist[];
+  pagination: PaginationInfo;
+  error: string | null;
+}
+
 export interface Setlist {
   id: string;
   versionId: string;

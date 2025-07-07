@@ -6,15 +6,26 @@ export async function GET(
   { params }: { params: Promise<{ username: string }> }
 ) {
   const { username: userId } = await params;
+  const { searchParams } = new URL(request.url);
+
+  // Get page parameter from query string
+  const page = parseInt(searchParams.get("page") || "1");
 
   if (!userId) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
 
+  if (page < 1) {
+    return NextResponse.json(
+      { error: "Invalid page parameter" },
+      { status: 400 }
+    );
+  }
+
   try {
-    // Get the attended setlists directly using userId
+    // Get the attended setlists with pagination
     const setlistsResponse = await fetch(
-      `https://api.setlist.fm/rest/1.0/user/${userId}/attended`,
+      `https://api.setlist.fm/rest/1.0/user/${userId}/attended?p=${page}`,
       {
         headers: {
           Accept: "application/json",
@@ -23,22 +34,53 @@ export async function GET(
       }
     );
 
+    // Handle different HTTP status codes appropriately
     if (!setlistsResponse.ok) {
       if (setlistsResponse.status === 404) {
-        throw new Error("User not found");
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
-      throw new Error("Failed to fetch setlists");
+      if (setlistsResponse.status === 401) {
+        return NextResponse.json({ error: "Invalid API key" }, { status: 500 });
+      }
+      if (setlistsResponse.status === 403) {
+        return NextResponse.json(
+          { error: "Access forbidden" },
+          { status: 500 }
+        );
+      }
+      // For other HTTP errors, return 500
+      return NextResponse.json(
+        { error: "Failed to fetch setlists from external API" },
+        { status: 500 }
+      );
     }
 
     const setlistsData: Setlists = await setlistsResponse.json();
     const setlists: Setlist[] = setlistsData.setlist || [];
 
-    return NextResponse.json({ setlists });
+    // Calculate pagination info
+    const total = setlistsData.total || 0;
+    const totalPages = Math.ceil(total / setlistsData.itemsPerPage);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+
+    return NextResponse.json({
+      setlists,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalItems: total,
+        itemsPerPage: setlistsData.itemsPerPage,
+        hasNextPage,
+        hasPreviousPage,
+      },
+    });
   } catch (error) {
     console.error("Error fetching setlists:", error);
+    // This catch block handles network errors, JSON parsing errors, etc.
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : "Internal server error",
+        error: "Internal server error",
       },
       { status: 500 }
     );
