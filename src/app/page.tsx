@@ -251,7 +251,7 @@ function LoadingFallback() {
             🎫 ShowStubs
           </h1>
           <p className="text-xl text-gray-700 mb-8">
-            Turn your setlist.fm setlist history into beautiful ticket stubs
+            Turn your setlist.fm concert history into beautiful ticket stubs
           </p>
         </div>
         <div className="text-center py-12">
