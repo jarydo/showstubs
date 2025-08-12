@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { applause, liebeheide, stampete } from "@/lib/fonts";
 import { Analytics } from "@vercel/analytics/next";
+import favicon from "./favicon.ico";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -8,10 +9,10 @@ export const metadata: Metadata = {
   description: "Generate ticket stubs from your concert history",
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: '16x16', type: 'image/x-icon' },
-      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+      { url: favicon.src, sizes: '16x16', type: 'image/x-icon' },
+      { url: favicon.src, sizes: '32x32', type: 'image/x-icon' },
     ],
-    apple: '/favicon.ico',
+    apple: favicon.src,
   },
 };
 
