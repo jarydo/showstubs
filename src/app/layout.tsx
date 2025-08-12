@@ -6,6 +6,13 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "ShowStubs",
   description: "Generate ticket stubs from your concert history",
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '16x16', type: 'image/x-icon' },
+      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+    ],
+    apple: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
