@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { applause, liebeheide, stampete } from "@/lib/fonts";
-import { inject } from "@vercel/analytics";
 import favicon from "./favicon.ico";
 import "./globals.css";
 
@@ -21,10 +20,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  inject();
-  
   return (
     <html lang="en">
+      <head>
+        <script
+          defer
+          src="https://va.vercel-scripts.com/v1/script.debug.js"
+          data-endpoint="https://va.vercel-scripts.com/v1/script.debug.js"
+        />
+      </head>
       <body
         className={`${applause.variable} ${liebeheide.variable} ${stampete.variable} antialiased`}
       >
