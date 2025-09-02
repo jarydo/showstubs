@@ -26,8 +26,19 @@ export default function RootLayout({
         <script
           defer
           src="https://va.vercel-scripts.com/v1/script.debug.js"
-          data-endpoint="https://va.vercel-scripts.com/v1/speed-insights"
-          data-host="showstubs-jaryd-diamonds-projects.vercel.app"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.va = window.va || function () {
+                (window.vaq = window.vaq || []).push(arguments);
+              };
+              window.va('config', {
+                endpoint: 'https://vitals.vercel-insights.com/v1/vitals',
+                host: 'showstubs-jaryd-diamonds-projects.vercel.app'
+              });
+            `,
+          }}
         />
       </head>
       <body
