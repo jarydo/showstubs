@@ -131,7 +131,7 @@ export default function TicketStub({ setlist }: TicketStubProps) {
 
           <div className="flex-1 ml-2 sm:ml-3 md:ml-4">
             <div className="border-b border-black">
-              <div className="text-xs sm:text-sm md:text-base truncate">
+              <div className="text-xs sm:text-sm md:text-base">
                 {setlist.tour?.name}
               </div>
               <div className="font-bold text-sm sm:text-base md:text-lg">
